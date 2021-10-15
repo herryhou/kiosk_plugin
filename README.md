@@ -1,13 +1,14 @@
 # kiosk_plugin
 
-Allows starting "kiosk" mode where the user is locked to a restricted set of applications.
-
-Currently, it only works in Android. All the methods will throw FlutterMethodNotImplemented in iOS.
+A Flutter plugin, enable app in `kiosk mode`, works for Android only.
 
 Effects - 
-* no notifications
-* disable non-allowlisted apps
-* keep on topmost (home screen disabled)
+* The status bar is blank
+* Notifications and system information are hidden
+* Home and Overview buttons are hidden
+* Disable other apps (allowlist itself only)
+* Keep on topmost (home screen disabled)
+* Lock screen is disabled
 * Keep the screen on (?)
 * Block windows and overlays (ie. toasts, dialogs)
 * more restartitions
@@ -23,7 +24,7 @@ Effects -
 
 ## Quick start
 
-In `pubspec.yaml`, add the `kiosk_plugin` as
+#### 1. In `pubspec.yaml`, add the `kiosk_plugin` as
 
 ```xml
 dependencies:
@@ -31,9 +32,13 @@ dependencies:
     sdk: flutter
 
   kiosk_plugin:
+    git:
+      url: git://github.com/herryhou/kiosk_plugin.git
+      ref: main
 ```
 
-then in `main.dart`, you can call it 
+#### 2. import `kiosk_plugin.dart`. As app start, it'll go into `kiosk mode` automatically.
+You can cstart/stop the `kiosk mode` if you want to.
 
 ```dart
 import 'package:kiosk_plugin/kiosk_plugin.dart';
@@ -42,7 +47,7 @@ await KioskPlugin.startKioskMode();
 await KioskPlugin.stopKioskMode();
 ```
 
-To declare `Device Admin`
+#### To declare `Device Admin`
 in `android/app/main/AndroidManifest.xml`, 
 add `<receiver>...</<receiver>` directly below `</activity>`
 
@@ -60,7 +65,7 @@ add `<receiver>...</<receiver>` directly below `</activity>`
         </receiver>
 ```
 
-To declare security policies,
+#### To declare security policies,
 create a file `android/app/src/main/res/xml/device_admin.xml` as shown below
 
 ```xml
@@ -74,7 +79,7 @@ create a file `android/app/src/main/res/xml/device_admin.xml` as shown below
 </device-admin>
 ```
 
-Install the apk to phone,
+#### Install the apk to phone,
 then make it `Device Owner App` 
 ```bash
 > adb shell dpm set-device-owner app.hh.kiosk_plugin_example/app.hh.kiosk_plugin.MyDeviceAdminReceiver 
@@ -83,7 +88,7 @@ then make it `Device Owner App`
 > adb shell dpm remove-active-admin app.hh.kiosk_plugin_example/app.hh.kiosk_plugin.MyDeviceAdminReceiver 
 ```
 
-Finally, restart the apk, it will enter 'kiok mode' automatically.
+#### Finally, restart the apk, it will enter 'kiok mode' automatically.
 You can also call `await KioskPlugin.stopKioskMode()`
 
 
